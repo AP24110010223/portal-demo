@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>SRM AP Student Login</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/jquery-ui.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+        body {
+            background: url('images/Ariel-View-1.jpg') no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            padding-bottom: 50px;
+        }
+
+        .header-logo-wrap {
+            padding: 12px 15px 5px 15px;
+        }
+        .header-logo-wrap img {
+            max-height: 60px;
+            width: auto;
+            display: block;
+        }
+
+        .content-container {
+            margin-top: 10px;
+            padding: 0 15px;
+        }
+
+        /* Welcome Card */
+        .welcome-panel {
+            background: rgba(255, 255, 255, 0.94);
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            padding: 15px 18px;
+            margin-bottom: 20px;
+        }
+        .welcome-title {
+            color: #2b669a;
+            font-size: 15pt;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+        .welcome-panel p {
+            margin: 0 0 6px 0;
+            font-size: 13px;
+            color: #333;
+        }
+        .welcome-panel .section-title {
+            color: #0000ff;
+            font-size: 13.5px;
+            font-weight: bold;
+        }
+        .welcome-panel ul {
+            padding-left: 18px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            color: #333;
+            line-height: 1.45;
+        }
+        .welcome-footer {
+            font-size: 12px;
+            color: #333;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .welcome-footer a {
+            color: #0000ff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Login Card */
+        .login-card-container {
+            max-width: 440px;
+            margin: 0 auto 30px auto;
+        }
+        @media (min-width: 992px) {
+            .login-card-container {
+                margin: 0;
+                max-width: 82%;
+            }
+        }
+        .login-panel {
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.22);
+            border: 1px solid #484622;
+            background: #ffffff;
+        }
+        .login-header {
+            background-color: #484622;
+            color: #ffffff;
+            padding: 11px 16px;
+            font-size: 13.5px;
+            font-weight: bold;
+            letter-spacing: 0.2px;
+        }
+        .login-body {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 16px 18px 12px 18px;
+        }
+        .form-group {
+            margin-bottom: 13px;
+        }
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .form-control {
+            height: 36px;
+            font-size: 13px;
+            border: 1px solid #cccccc;
+            border-radius: 3px;
+            box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+        }
+        .form-control:focus {
+            border-color: #66afe9;
+            box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 8px rgba(102,175,233,0.6);
+        }
+
+        /* Dynamic Captcha Box */
+        .captcha-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .captcha-canvas-wrap {
+            position: relative;
+            background: #f7f9fa;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            padding: 2px 4px;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+        }
+        #captchaCanvas {
+            display: block;
+            border-radius: 2px;
+        }
+        .captcha-refresh-btn {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            color: #333;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+            outline: none;
+        }
+        .captcha-refresh-btn:hover {
+            background: #e2e2e2;
+            color: #000;
+        }
+
+        .btn-login {
+            background-color: #5cb85c;
+            border-color: #4cae4c;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 14.5px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            width: 100%;
+            margin-top: 5px;
+            transition: background-color 0.2s;
+            outline: none;
+        }
+        .btn-login:hover, .btn-login:focus {
+            background-color: #449d44;
+            border-color: #398439;
+            color: #ffffff;
+        }
+
+        .forgot-pw-link {
+            display: block;
+            text-align: right;
+            color: #0000ff;
+            font-size: 12px;
+            margin-top: 10px;
+            margin-bottom: 8px;
+            text-decoration: none;
+        }
+        .forgot-pw-link:hover {
+            text-decoration: underline;
+        }
+
+        .login-notice {
+            color: #000099;
+            text-align: center;
+            font-size: 11px;
+            line-height: 1.4;
+            margin-top: 10px;
+        }
+
+        #divmsg {
+            color: #d9534f;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+            min-height: 18px;
+            margin-top: 6px;
+        }
+
+        /* Fixed Footer */
+        .bottom-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #101010;
+            color: #ffffff;
+            font-size: 11px;
+            text-align: center;
+            padding: 6px 12px;
+            z-index: 1050;
+            line-height: 1.35;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Left University Logo -->
+    <div class="header-logo-wrap">
+        <img src="images/srmaplogo.png" alt="SRM AP Logo">
+    </div>
+
+    <!-- Main Container -->
+    <div class="container-fluid content-container">
+        <div class="row">
+            <!-- Left Column: Welcome / Instructions -->
+            <div class="col-md-6 col-sm-12">
+                <div class="welcome-panel">
+                    <h1 class="welcome-title">Welcome to SRM University, AP – Andhra Pradesh</h1>
+                    
+                    <p><span class="section-title">Freshers</span></p>
+                    <p>The Portal will help you to -</p>
+                    <ul>
+                        <li>Login with your Application number and your Date of Birth will be the password in DDMMYYYY format.</li>
+                        <li>Choose the courses that you wish to study</li>
+                        <li>Complete the payment</li>
+                        <li>Download the Provisional Admission Letter.</li>
+                        <li>Complete your enrollment</li>
+                    </ul>
+
+                    <p><span class="section-title">Senior Students</span></p>
+                    <p>Please login with your Registration Number and password to –</p>
+                    <ul>
+                        <li>Register for semester courses</li>
+                        <li>View Class timetable, etc</li>
+                        <li>Pay your fee – tuition, etc</li>
+                        <li>View attendance, results etc</li>
+                    </ul>
+
+                    <div class="welcome-footer">
+                        <span>For any technical support email to <a href="mailto:itkm.helpdesk@srmap.edu.in">itkm.helpdesk@srmap.edu.in</a></span>
+                        <a href="javascript:void(0)" onclick="funTerms()">Terms and Conditions</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Login Card -->
+            <div class="col-md-6 col-sm-12">
+                <div class="login-card-container">
+                    <div class="login-panel">
+                        <div class="login-header">
+                            Portal for Freshers and Senior Students
+                        </div>
+                        <div class="login-body">
+                            <form id="frmSL" onsubmit="handleLogin(event)">
+                                <div class="form-group">
+                                    <label for="UserName">Application Number / Register Number</label>
+                                    <input type="text" class="form-control" id="UserName" name="UserName" value="" placeholder="Enter Application Number / Register Number" required maxlength="13">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="AuthKey">Password</label>
+                                    <input type="password" class="form-control" id="AuthKey" name="AuthKey" value="" placeholder="Password" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Captcha</label>
+                                    <div class="captcha-row">
+                                        <div class="captcha-canvas-wrap" onclick="generateCaptcha()" title="Click to refresh captcha">
+                                            <canvas id="captchaCanvas" width="150" height="38"></canvas>
+                                        </div>
+                                        <button type="button" class="captcha-refresh-btn" onclick="generateCaptcha()" title="Refresh Captcha">
+                                            &#x21bb;
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control" id="ccode" name="ccode" placeholder="Enter Captcha Text" required maxlength="6" autocomplete="off">
+                                </div>
+
+                                <button type="submit" id="btnLogin" class="btn btn-login"><b>Login</b></button>
+                            </form>
+
+                            <a href="javascript:passwordreset()" class="forgot-pw-link">Forgot Password</a>
+
+                            <div id="divmsg"></div>
+
+                            <div class="login-notice">
+                                If you are a Student and this is your first login, you must use your Register Number / Application Number as your User ID,
+                                with your date of birth [Format ddmmyyyy E.g. 03121990] as your password.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Footer -->
+    <footer class="bottom-footer">
+        Developed by: Firstline Infotech Pvt Ltd, T.Nagar, Chennai,Tamil Nadu, India. www.firstlineinfotech.com
+    </footer>
+
+    <script>
+        var currentCaptchaCode = "";
+
+        // Realistic Captcha Generator
+        function generateCaptcha() {
+            var chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"; // characters without ambiguous 0/O, 1/I
+            var code = "";
+            for (var i = 0; i < 5; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            currentCaptchaCode = code;
+
+            var canvas = document.getElementById("captchaCanvas");
+            if (!canvas) return;
+            var ctx = canvas.getContext("2d");
+            var w = canvas.width;
+            var h = canvas.height;
+
+            // Background
+            ctx.fillStyle = "#f3f5f6";
+            ctx.fillRect(0, 0, w, h);
+
+            // Subtle background noise grid
+            ctx.strokeStyle = "#e2e6e8";
+            ctx.lineWidth = 1;
+            for (var x = 0; x < w; x += 15) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+                ctx.stroke();
+            }
+            for (var y = 0; y < h; y += 10) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+            }
+
+            // Random noise lines across text
+            var lineColors = ["#b0bec5", "#90a4ae", "#a1887f", "#80cbc4", "#9fa8da"];
+            for (var l = 0; l < 4; l++) {
+                ctx.strokeStyle = lineColors[l % lineColors.length];
+                ctx.lineWidth = 1 + Math.random();
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * 20, Math.random() * h);
+                ctx.bezierCurveTo(
+                    w * 0.3, Math.random() * h,
+                    w * 0.7, Math.random() * h,
+                    w - Math.random() * 10, Math.random() * h
+                );
+                ctx.stroke();
+            }
+
+            // Draw distorted characters
+            var fontFamilies = ["Arial", "Georgia", "Verdana", "Impact"];
+            var textColors = ["#1a237e", "#004d40", "#b71c1c", "#3e2723", "#263238", "#bf360c"];
+
+            for (var i = 0; i < code.length; i++) {
+                var char = code[i];
+                var fontSize = Math.floor(22 + Math.random() * 5);
+                var fontFam = fontFamilies[Math.floor(Math.random() * fontFamilies.length)];
+                ctx.font = "bold " + fontSize + "px " + fontFam;
+                ctx.fillStyle = textColors[Math.floor(Math.random() * textColors.length)];
+
+                ctx.save();
+                var charX = 16 + i * 26 + (Math.random() * 4 - 2);
+                var charY = 27 + (Math.random() * 4 - 2);
+                var angle = (Math.random() - 0.5) * 0.35; // random slight rotation
+
+                ctx.translate(charX, charY);
+                ctx.rotate(angle);
+                ctx.fillText(char, 0, 0);
+                ctx.restore();
+            }
+
+            // Random noise speckles/dots
+            for (var d = 0; d < 35; d++) {
+                ctx.fillStyle = textColors[Math.floor(Math.random() * textColors.length)];
+                ctx.beginPath();
+                ctx.arc(Math.random() * w, Math.random() * h, 1, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Keep captcha input empty for user to type
+            $("#ccode").val("");
+            $("#divmsg").html("");
+        }
+
+        // Handle login submission
+        function handleLogin(event) {
+            event.preventDefault();
+
+            var username = $("#UserName").val().trim();
+            var password = $("#AuthKey").val();
+            var captcha = $("#ccode").val().trim();
+
+            if (!username) {
+                $("#divmsg").html("Enter Register Number / Application Number");
+                return;
+            }
+            if (!password) {
+                $("#divmsg").html("Enter Password");
+                return;
+            }
+            if (!captcha) {
+                $("#divmsg").html("Enter Captcha Text");
+                return;
+            }
+
+            // Verify Captcha (case-insensitive)
+            if (captcha.toUpperCase() !== currentCaptchaCode.toUpperCase()) {
+                $("#divmsg").html("Invalid Captcha Text");
+                generateCaptcha();
+                $("#ccode").val("").focus();
+                return;
+            }
+
+            // Verify Credentials
+            var validUser = "AP25110070058";
+            var validPass = "Heman123";
+
+            if (username.toUpperCase() === validUser && password === validPass) {
+                // Successful login
+                $("#divmsg").css("color", "#5cb85c").html("Logging in...");
+                $("#btnLogin").prop("disabled", true).html("<b>Please wait...</b>");
+                setTimeout(function() {
+                    window.location.href = "portal.html";
+                }, 400);
+            } else {
+                $("#divmsg").css("color", "#d9534f").html("Invalid Application Number / Register Number or Password");
+                generateCaptcha();
+            }
+        }
+
+        function passwordreset() {
+            var val = $("#UserName").val().trim();
+            if (!val) {
+                alert("Please enter Register Number to reset password.");
+                return;
+            }
+            alert("Password reset instructions have been sent to student registered email for " + val);
+        }
+
+        function funTerms() {
+            alert("Terms and Conditions for SRM University AP Student Portal.");
+        }
+
+        $(function () {
+            generateCaptcha();
+            $(".form-control").on("input", function () {
+                $("#divmsg").html("");
+            });
+        });
+    </script>
+</body>
+</html>
